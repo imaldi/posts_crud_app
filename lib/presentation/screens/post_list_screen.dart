@@ -4,7 +4,7 @@ import 'package:posts_crud_app/presentation/state_management/cubit/posts_cubit.d
 import 'package:posts_crud_app/presentation/widgets/my_toast.dart';
 
 import '../state_management/bloc/posts/posts_bloc.dart';
-import 'new_post_screen.dart';
+import 'create_or_update_post_screen.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key, required this.title});
