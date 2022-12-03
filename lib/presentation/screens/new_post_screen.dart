@@ -6,10 +6,13 @@ import 'package:posts_crud_app/presentation/widgets/my_toast.dart';
 
 class CreateOrUpdatePostScreen extends StatefulWidget {
   final PostsResponse? postsResponse;
-  const CreateOrUpdatePostScreen({this.postsResponse, Key? key}) : super(key: key);
+
+  const CreateOrUpdatePostScreen({this.postsResponse, Key? key})
+      : super(key: key);
 
   @override
-  State<CreateOrUpdatePostScreen> createState() => _CreateOrUpdatePostScreenState();
+  State<CreateOrUpdatePostScreen> createState() =>
+      _CreateOrUpdatePostScreenState();
 }
 
 class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
@@ -17,10 +20,13 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
   var titleController = TextEditingController();
   var bodyController = TextEditingController();
   var isCreateNew = true;
+
   @override
   void initState() {
     super.initState();
     isCreateNew = widget.postsResponse == null;
+    titleController.text = widget.postsResponse?.title ?? "";
+    bodyController.text = widget.postsResponse?.body ?? "";
   }
 
   @override
@@ -50,7 +56,8 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
                             }
                             return null;
                           },
-                          decoration: const InputDecoration(label: Text("Title"))),
+                          decoration:
+                              const InputDecoration(label: Text("Title"))),
                       TextFormField(
                         controller: bodyController,
                         validator: (val) {
@@ -67,27 +74,53 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 16),
                           child: BlocListener<PostsBloc, PostsState>(
                             listener: (context, state) {
-                              if(state is CreatePostsSuccess){
+                              if (state is CreatePostsSuccess) {
                                 myToast("Success Creating Post");
                                 Navigator.of(context).pop();
                                 context.read<PostsBloc>().add(FetchAllPosts());
                               }
-                              if(state is CreatePostsFailed){
-                                myToast("Failed Creating Post");
+
+                              if (state is UpdatePostsSuccess) {
+                                myToast("Success Update Post");
+                                Navigator.of(context).pop();
+                                context.read<PostsBloc>().add(FetchAllPosts());
+                              }
+
+                              if (state is CreatePostsFailed) {
+                                myToast("Failed Creating Post: ${state.errorMessage}");
+                              }
+
+                              if (state is UpdatePostsFailed) {
+                                myToast("Failed Updating Post: ${state.errorMessage}");
                               }
                             },
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  if ((formKey.currentState?.validate() ?? false)) {
-                                    formKey.currentState?.save();
-                                    context.read<PostsBloc>().add(CreateAPosts(
-                                        PostsResponse(
+                            child: BlocBuilder<PostsBloc, PostsState>(
+                              builder: (context, state) {
+                                if(state is LoadingPosts){
+                                  return const CircularProgressIndicator();
+                                }
+                                return ElevatedButton(
+                                    onPressed: () {
+                                      if ((formKey.currentState?.validate() ??
+                                          false)) {
+                                        formKey.currentState?.save();
+                                        var responseToSend = PostsResponse(
                                             userId: 1,
                                             title: titleController.text,
-                                            body: bodyController.text)));
-                                  }
-                                },
-                                child: Text("Create Post")),
+                                            body: bodyController.text);
+                                        var eventToAdd =
+                                            widget.postsResponse == null
+                                                ? CreateAPosts(responseToSend)
+                                                : UpdateAPosts(responseToSend);
+                                        context
+                                            .read<PostsBloc>()
+                                            .add(eventToAdd);
+                                      }
+                                    },
+                                    child: Text(
+                                        "${widget.postsResponse == null ? "Create" : "Update"} Post"));
+                              },
+                            ),
                           ))
                     ],
                   ),

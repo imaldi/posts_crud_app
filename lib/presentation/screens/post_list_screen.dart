@@ -50,19 +50,29 @@ class _PostListScreenState extends State<PostListScreen> {
                 itemCount: state.postList.length,
                 itemBuilder: (c,i){
                   return
-                    Card(child: ListTile(
-                      title: Text(state.postList[i].title ?? "-"),
-                      subtitle: Text(state.postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
-                    ));
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (c)=> CreateOrUpdatePostScreen(postsResponse: state.postList[i],)));
+                      },
+                      child: Card(child: ListTile(
+                        title: Text(state.postList[i].title ?? "-"),
+                        subtitle: Text(state.postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
+                      )),
+                    );
                 });
           }
           if(state is LoadingPosts){
             return Container(child: const Center(child: CircularProgressIndicator(),));
           }
-          return Container(
-            child: const Center(
-              child: Text(
-                  "Failed Fetching"
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<PostsBloc>().add(FetchAllPosts());
+            },
+            child: Container(
+              child: const Center(
+                child: Text(
+                    "Failed Fetching, swipe down to refresh"
+                ),
               ),
             ),
           );

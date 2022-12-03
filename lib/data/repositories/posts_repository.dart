@@ -33,4 +33,15 @@ class PostsRepository {
             return Left(ServerFailure());
         }
     }
+    Future<Either<Failure, PostsResponse>> updateAPost(PostsResponse postModel) async {
+        if (!(await networkInfo.isConnected)) return Left(NoInternetFailure());
+
+        try{
+            final response = await postsRemoteDataSource.updateAPost(postModel);
+
+            return Right(response);
+        } on ServerException {
+            return Left(ServerFailure());
+        }
+    }
 }

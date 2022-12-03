@@ -19,6 +19,8 @@ class FetchPostsSuccess extends PostsState {
 }
 
 class FetchPostsFailed extends PostsState {
+  final String? errorMessage;
+  const FetchPostsFailed({this.errorMessage});
   @override
   List<Object> get props => [];
 }
@@ -32,9 +34,27 @@ class CreatePostsSuccess extends PostsState {
 }
 
 class CreatePostsFailed extends PostsState {
+  final String? errorMessage;
+  const CreatePostsFailed({this.errorMessage});
+  @override
+  List<Object?> get props => [errorMessage];
+}
+
+class UpdatePostsSuccess extends PostsState {
+  final PostsResponse postsResponse;
+  const UpdatePostsSuccess(this.postsResponse);
+
+  @override
+  List<Object?> get props => [postsResponse];
+}
+
+class UpdatePostsFailed extends PostsState {
+  final String? errorMessage;
+  const UpdatePostsFailed({this.errorMessage});
   @override
   List<Object?> get props => [];
 }
+
 
 class LoadingPosts extends PostsState {
   @override

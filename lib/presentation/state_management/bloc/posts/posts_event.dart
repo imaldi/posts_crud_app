@@ -15,3 +15,10 @@ class CreateAPosts extends PostsEvent {
   @override
   List<Object?> get props => [];
 }
+
+class UpdateAPosts extends PostsEvent {
+  final PostsResponse postModel;
+  const UpdateAPosts(this.postModel);
+  @override
+  List<Object?> get props => [];
+}
