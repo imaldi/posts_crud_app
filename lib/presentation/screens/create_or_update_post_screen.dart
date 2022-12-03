@@ -33,7 +33,7 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${isCreateNew ? "Create New Post" : "Update a Post"}"),
+        title: Text(isCreateNew ? "Create New Post" : "Update a Post"),
       ),
       body: Center(
         child: Container(
@@ -47,7 +47,7 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("New Post Screen"),
+                      Text(isCreateNew ? "Create new post" : "Update a post"),
                       TextFormField(
                           controller: titleController,
                           validator: (val) {
