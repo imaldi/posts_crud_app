@@ -33,5 +33,11 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
       var newState = failureOrResponseList.fold((l) => UpdatePostsFailed(errorMessage: getErrorBasedOnFailureType(l)), (r) => UpdatePostsSuccess(r));
       emit(newState);
     });
+    on<DeleteAPosts>((event, emit) async {
+      emit(LoadingPosts());
+      var failureOrResponseList = await repository.deleteAPost(event.postId);
+      var newState = failureOrResponseList.fold((l) => DeletePostsFailed(errorMessage: getErrorBasedOnFailureType(l)), (r) => DeletePostsSuccess());
+      emit(newState);
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:posts_crud_app/presentation/widgets/my_toast.dart';
 
 import '../state_management/bloc/posts/posts_bloc.dart';
 import 'new_post_screen.dart';
@@ -43,7 +44,12 @@ class _PostListScreenState extends State<PostListScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: BlocBuilder<PostsBloc, PostsState>(
+      body: BlocConsumer<PostsBloc, PostsState>(
+        listener: (context,state){
+          if(state is DeletePostsSuccess){
+            myToast("Success Delete a Post");
+          }
+        },
         builder: (context, state) {
           if(state is FetchPostsSuccess){
             return ListView.builder(
@@ -57,6 +63,11 @@ class _PostListScreenState extends State<PostListScreen> {
                       child: Card(child: ListTile(
                         title: Text(state.postList[i].title ?? "-"),
                         subtitle: Text(state.postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
+                        trailing: InkWell(
+                            onTap: (){
+                              context.read<PostsBloc>().add(DeleteAPosts(state.postList[i].id ?? 1));
+                            },
+                            child: const Icon(Icons.delete,color: Colors.blue,)),
                       )),
                     );
                 });
@@ -64,14 +75,24 @@ class _PostListScreenState extends State<PostListScreen> {
           if(state is LoadingPosts){
             return Container(child: const Center(child: CircularProgressIndicator(),));
           }
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<PostsBloc>().add(FetchAllPosts());
-            },
-            child: Container(
-              child: const Center(
-                child: Text(
-                    "Failed Fetching, swipe down to refresh"
+          return Container(
+            padding: const EdgeInsets.only(top: 32),
+            child: Center(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  context.read<PostsBloc>().add(FetchAllPosts());
+                },
+                child: ListView(
+
+                  children: [
+                    Container(
+                      child: const Center(
+                        child: Text(
+                            "Failed Fetching, swipe down to refresh"
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

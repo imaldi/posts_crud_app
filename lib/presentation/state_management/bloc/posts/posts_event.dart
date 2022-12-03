@@ -22,3 +22,10 @@ class UpdateAPosts extends PostsEvent {
   @override
   List<Object?> get props => [];
 }
+
+class DeleteAPosts extends PostsEvent {
+  final int postId;
+  const DeleteAPosts(this.postId);
+  @override
+  List<Object?> get props => [postId];
+}

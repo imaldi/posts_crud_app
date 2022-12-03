@@ -93,4 +93,30 @@ class PostsRemoteDataSource {
       throw ServerException();
     }
   }
+  Future<PostsResponse> deleteAPost(int postId) async {
+    final url = Uri.https(baseUrl,"$postUrl/$postId");
+    print("url delete: $url");
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == HttpStatus.ok) {
+      var theResponse = PostsResponse.fromJson(jsonDecode(response.body));
+      // var isResponseDataNull = theResponse == null;
+      // if (isResponseDataNull) {
+      //   throw ServerException();
+      // }
+      print("theResponse $theResponse");
+      return theResponse;
+    } else {
+      print("theResponse code ${response.statusCode}");
+      print("theResponse body ${response.body}");
+
+      throw ServerException();
+    }
+  }
 }

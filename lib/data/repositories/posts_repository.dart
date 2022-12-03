@@ -44,4 +44,15 @@ class PostsRepository {
             return Left(ServerFailure());
         }
     }
+    Future<Either<Failure, bool>> deleteAPost(int postId) async {
+        if (!(await networkInfo.isConnected)) return Left(NoInternetFailure());
+
+        try{
+            await postsRemoteDataSource.deleteAPost(postId);
+
+            return const Right(true);
+        } on ServerException {
+            return Left(ServerFailure());
+        }
+    }
 }
