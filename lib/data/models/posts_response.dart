@@ -23,7 +23,7 @@ class PostsResponse extends Equatable {
   String? body;
 
   factory PostsResponse.fromJson(Map<String, dynamic> json) => PostsResponse(
-    userId: json["userId"],
+    userId: (json["userId"] is String ? int.parse(json["userId"]) : json["userId"]),
     id: json["id"],
     title: json["title"],
     body: json["body"],
