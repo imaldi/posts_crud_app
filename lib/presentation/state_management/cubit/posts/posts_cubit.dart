@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart';
 
-import '../../../data/models/posts_response.dart';
+import '../../../../data/models/posts_response.dart';
 
 part 'posts_state.dart';
 

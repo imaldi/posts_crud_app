@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:posts_crud_app/presentation/state_management/cubit/posts_cubit.dart';
+import 'package:posts_crud_app/presentation/state_management/cubit/posts/posts_cubit.dart';
 import 'package:posts_crud_app/presentation/widgets/my_toast.dart';
 
 import '../state_management/bloc/posts/posts_bloc.dart';

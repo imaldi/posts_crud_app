@@ -6,7 +6,7 @@ import 'package:posts_crud_app/data/data_source/remote_data_source/posts_remote_
 import 'package:posts_crud_app/data/repositories/posts_repository.dart';
 import 'package:posts_crud_app/presentation/screens/post_list_screen.dart';
 import 'package:posts_crud_app/presentation/state_management/bloc/posts/posts_bloc.dart';
-import 'package:posts_crud_app/presentation/state_management/cubit/posts_cubit.dart';
+import 'package:posts_crud_app/presentation/state_management/cubit/posts/posts_cubit.dart';
 
 void main() {
   runApp(const MyApp());
