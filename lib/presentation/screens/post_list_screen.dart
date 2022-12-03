@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:posts_crud_app/presentation/state_management/cubit/posts_cubit.dart';
 import 'package:posts_crud_app/presentation/widgets/my_toast.dart';
 
 import '../state_management/bloc/posts/posts_bloc.dart';
@@ -46,26 +47,31 @@ class _PostListScreenState extends State<PostListScreen> {
       ),
       body: BlocConsumer<PostsBloc, PostsState>(
         listener: (context,state){
+          if(state is FetchPostsSuccess){
+            context.read<PostsCubit>().updateListCache(state.postList);
+          }
           if(state is DeletePostsSuccess){
+            context.read<PostsCubit>().removeListElementWhereId(state.postId);
             myToast("Success Delete a Post");
           }
         },
         builder: (context, state) {
-          if(state is FetchPostsSuccess){
+          if(state is FetchPostsSuccess || state is CreatePostsSuccess || state is UpdatePostsSuccess || state is DeletePostsSuccess){
+            var postList = context.watch<PostsCubit>().state.postList ?? [];
             return ListView.builder(
-                itemCount: state.postList.length,
+                itemCount: postList.length,
                 itemBuilder: (c,i){
                   return
                     InkWell(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (c)=> CreateOrUpdatePostScreen(postsResponse: state.postList[i],)));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (c)=> CreateOrUpdatePostScreen(postsResponse: postList[i],)));
                       },
                       child: Card(child: ListTile(
-                        title: Text(state.postList[i].title ?? "-"),
-                        subtitle: Text(state.postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
+                        title: Text(postList[i].title ?? "-"),
+                        subtitle: Text(postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
                         trailing: InkWell(
                             onTap: (){
-                              context.read<PostsBloc>().add(DeleteAPosts(state.postList[i].id ?? 1));
+                              context.read<PostsBloc>().add(DeleteAPosts(postList[i].id ?? 1));
                             },
                             child: const Icon(Icons.delete,color: Colors.blue,)),
                       )),

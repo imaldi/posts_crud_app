@@ -93,7 +93,7 @@ class PostsRemoteDataSource {
       throw ServerException();
     }
   }
-  Future<PostsResponse> deleteAPost(int postId) async {
+  Future<bool> deleteAPost(int postId) async {
     final url = Uri.https(baseUrl,"$postUrl/$postId");
     print("url delete: $url");
 
@@ -105,13 +105,7 @@ class PostsRemoteDataSource {
     );
 
     if (response.statusCode == HttpStatus.ok) {
-      var theResponse = PostsResponse.fromJson(jsonDecode(response.body));
-      // var isResponseDataNull = theResponse == null;
-      // if (isResponseDataNull) {
-      //   throw ServerException();
-      // }
-      print("theResponse $theResponse");
-      return theResponse;
+      return true;
     } else {
       print("theResponse code ${response.statusCode}");
       print("theResponse body ${response.body}");
