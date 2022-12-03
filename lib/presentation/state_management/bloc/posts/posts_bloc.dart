@@ -15,8 +15,15 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
   PostsRepository repository;
   PostsBloc({required this.repository}) : super(PostsInitial()) {
     on<FetchAllPosts>((event, emit) async {
+      emit(LoadingPosts());
       var failureOrResponseList = await repository.fetchAllPost();
-      var newState = failureOrResponseList.fold((l) => FetchPostsFailed(), (r) => FetcbPostsSuccess(r));
+      var newState = failureOrResponseList.fold((l) => FetchPostsFailed(), (r) => FetchPostsSuccess(r));
+      emit(newState);
+    });
+    on<CreateAPosts>((event, emit) async {
+      emit(LoadingPosts());
+      var failureOrResponseList = await repository.createAPost(event.postModel);
+      var newState = failureOrResponseList.fold((l) => CreatePostsFailed(), (r) => CreatePostsSuccess(r));
       emit(newState);
     });
   }

@@ -8,3 +8,10 @@ class FetchAllPosts extends PostsEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CreateAPosts extends PostsEvent {
+  final PostsResponse postModel;
+  const CreateAPosts(this.postModel);
+  @override
+  List<Object?> get props => [];
+}

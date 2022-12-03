@@ -9,9 +9,9 @@ class PostsInitial extends PostsState {
   List<Object> get props => [];
 }
 
-class FetcbPostsSuccess extends PostsState {
+class FetchPostsSuccess extends PostsState {
   final List<PostsResponse> postList;
-  const FetcbPostsSuccess(this.postList);
+  const FetchPostsSuccess(this.postList);
   @override
   List<Object> get props => [
     postList
@@ -21,6 +21,19 @@ class FetcbPostsSuccess extends PostsState {
 class FetchPostsFailed extends PostsState {
   @override
   List<Object> get props => [];
+}
+
+class CreatePostsSuccess extends PostsState {
+  final PostsResponse postsResponse;
+  const CreatePostsSuccess(this.postsResponse);
+
+  @override
+  List<Object?> get props => [postsResponse];
+}
+
+class CreatePostsFailed extends PostsState {
+  @override
+  List<Object?> get props => [];
 }
 
 class LoadingPosts extends PostsState {

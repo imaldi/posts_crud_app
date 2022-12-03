@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:posts_crud_app/data/models/posts_response.dart';
@@ -9,7 +10,7 @@ import '../../../core/error/exceptions.dart';
 class PostsRemoteDataSource {
 
   Future<List<PostsResponse>> fetchAllPost() async {
-    final url = Uri.https(baseUrl,fetchAll);
+    final url = Uri.https(baseUrl,postUrl);
 
     final response = await http.get(
       url,
@@ -27,6 +28,36 @@ class PostsRemoteDataSource {
       }
       return theResponse;
     } else {
+      throw ServerException();
+    }
+  }
+  Future<PostsResponse> createAPost(PostsResponse postModel) async {
+    final url = Uri.https(baseUrl,postUrl);
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        'userId': (postModel.userId ?? 1).toString(),
+        'title': postModel.title ?? "default title",
+        'body': postModel.body ?? "default body",
+      }
+    );
+
+    if (response.statusCode == HttpStatus.created) {
+      var theResponse = PostsResponse.fromJson(jsonDecode(response.body));
+      // var isResponseDataNull = theResponse == null;
+      // if (isResponseDataNull) {
+      //   throw ServerException();
+      // }
+      print("theResponse $theResponse");
+      return theResponse;
+    } else {
+      print("theResponse code ${response.statusCode}");
+      print("theResponse body ${response.body}");
+
       throw ServerException();
     }
   }

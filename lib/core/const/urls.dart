@@ -1,2 +1,2 @@
 const baseUrl = "jsonplaceholder.typicode.com";
-const fetchAll = "/posts";
+const postUrl = "/posts";
