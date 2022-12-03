@@ -77,13 +77,11 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
                               if (state is CreatePostsSuccess) {
                                 myToast("Success Creating Post");
                                 Navigator.of(context).pop();
-                                context.read<PostsBloc>().add(FetchAllPosts());
                               }
 
                               if (state is UpdatePostsSuccess) {
                                 myToast("Success Update Post");
                                 Navigator.of(context).pop();
-                                context.read<PostsBloc>().add(FetchAllPosts());
                               }
 
                               if (state is CreatePostsFailed) {
@@ -105,6 +103,7 @@ class _CreateOrUpdatePostScreenState extends State<CreateOrUpdatePostScreen> {
                                           false)) {
                                         formKey.currentState?.save();
                                         var responseToSend = PostsResponse(
+                                            id: widget.postsResponse?.id ?? 1,
                                             userId: 1,
                                             title: titleController.text,
                                             body: bodyController.text);

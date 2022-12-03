@@ -46,40 +46,66 @@ class _PostListScreenState extends State<PostListScreen> {
         title: Text(widget.title),
       ),
       body: BlocConsumer<PostsBloc, PostsState>(
-        listener: (context,state){
-          if(state is FetchPostsSuccess){
+        listener: (context, state) {
+          if (state is FetchPostsSuccess) {
             context.read<PostsCubit>().updateListCache(state.postList);
           }
-          if(state is DeletePostsSuccess){
+          if (state is CreatePostsSuccess){
+            context.read<PostsCubit>().addListElement(state.postsResponse);
+          }
+          if(state is UpdatePostsSuccess){
+            context.read<PostsCubit>().updateListElementBasedOnId(state.postsResponse);
+          }
+          if (state is DeletePostsSuccess) {
             context.read<PostsCubit>().removeListElementWhereId(state.postId);
             myToast("Success Delete a Post");
           }
         },
         builder: (context, state) {
-          if(state is FetchPostsSuccess || state is CreatePostsSuccess || state is UpdatePostsSuccess || state is DeletePostsSuccess){
-            var postList = context.watch<PostsCubit>().state.postList ?? [];
+          var postList = context.watch<PostsCubit>().state.postList ?? [];
+
+          if (state is FetchPostsSuccess ||
+              state is CreatePostsSuccess ||
+              state is UpdatePostsSuccess ||
+              state is DeletePostsSuccess) {
             return ListView.builder(
                 itemCount: postList.length,
-                itemBuilder: (c,i){
-                  return
-                    InkWell(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (c)=> CreateOrUpdatePostScreen(postsResponse: postList[i],)));
-                      },
-                      child: Card(child: ListTile(
-                        title: Text(postList[i].title ?? "-"),
-                        subtitle: Text(postList[i].body ?? "-",softWrap: true,maxLines: 2,overflow: TextOverflow.ellipsis,),
-                        trailing: InkWell(
-                            onTap: (){
-                              context.read<PostsBloc>().add(DeleteAPosts(postList[i].id ?? 1));
-                            },
-                            child: const Icon(Icons.delete,color: Colors.blue,)),
-                      )),
-                    );
+                itemBuilder: (c, i) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => CreateOrUpdatePostScreen(
+                                postsResponse: postList[i],
+                              )));
+                    },
+                    child: Card(
+                        child: ListTile(
+                      title: Text(postList[i].title ?? "-"),
+                      subtitle: Text(
+                        postList[i].body ?? "-",
+                        softWrap: true,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: InkWell(
+                          onTap: () {
+                            context
+                                .read<PostsBloc>()
+                                .add(DeleteAPosts(postList[i].id ?? 1));
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.blue,
+                          )),
+                    )),
+                  );
                 });
           }
-          if(state is LoadingPosts){
-            return Container(child: const Center(child: CircularProgressIndicator(),));
+          if (state is LoadingPosts) {
+            return Container(
+                child: const Center(
+              child: CircularProgressIndicator(),
+            ));
           }
           return Container(
             padding: const EdgeInsets.only(top: 32),
@@ -89,13 +115,10 @@ class _PostListScreenState extends State<PostListScreen> {
                   context.read<PostsBloc>().add(FetchAllPosts());
                 },
                 child: ListView(
-
                   children: [
                     Container(
                       child: const Center(
-                        child: Text(
-                            "Failed Fetching, swipe down to refresh"
-                        ),
+                        child: Text("Failed Fetching, swipe down to refresh"),
                       ),
                     )
                   ],
@@ -105,10 +128,12 @@ class _PostListScreenState extends State<PostListScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (c)=>const CreateOrUpdatePostScreen()));
-      },
-      child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (c) => const CreateOrUpdatePostScreen()));
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

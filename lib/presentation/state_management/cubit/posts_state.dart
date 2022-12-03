@@ -1,8 +1,8 @@
 part of 'posts_cubit.dart';
 
-class PostsCubitState {
-  List<PostsResponse>? postList;
-  PostsCubitState({this.postList});
+class PostsCubitState extends Equatable{
+  final List<PostsResponse>? postList;
+  const PostsCubitState({this.postList});
   @override
   List<Object?> get props => [postList];
 }
